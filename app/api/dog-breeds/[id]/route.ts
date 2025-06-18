@@ -1,36 +1,24 @@
 import { NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { Database } from '@/lib/types/supabase';
+import { getBreedById } from '@/lib/getBreedById';
 
-export const dynamic = 'force-dynamic';
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const breedId = url.pathname.split('/').pop()?.trim();
 
-export async function GET(
-  request: Request,
-  context: { params: { id: string } }
-) {
+  if (!breedId) {
+    return NextResponse.json({ message: 'Missing breed ID' }, { status: 400 });
+  }
+
   try {
-    const supabase = createRouteHandlerClient<Database>({ cookies });
-    const { data: breed, error } = await supabase
-      .from('dog_breeds')
-      .select('*')
-      .eq('id', context.params.id)
-      .single();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const breed = await getBreedById(breedId);
 
     if (!breed) {
-      return NextResponse.json({ error: 'Breed not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Breed not found' }, { status: 404 });
     }
 
     return NextResponse.json(breed);
   } catch (error) {
-    console.error('Error fetching breed:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('GET /api/dog-breeds/[id] error:', error);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }

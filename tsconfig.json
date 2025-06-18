@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,9 +18,9 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".",            // 여기로 이동
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]           // 중첩 없이 여기에 작성
+      "@/*": ["./*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

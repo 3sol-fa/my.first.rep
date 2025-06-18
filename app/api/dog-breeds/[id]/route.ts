@@ -4,7 +4,7 @@ import { getBreedById } from '@/lib/getBreedById';
 export async function GET(
   _req: NextRequest,
   { params }: { params: { id: string } }
-): Promise<NextResponse> {
+) {
   const breedId = params.id?.trim();
 
   if (!breedId) {

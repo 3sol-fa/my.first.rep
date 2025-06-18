@@ -3,7 +3,8 @@ import { getBreedById } from '@/lib/getBreedById';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const breedId = url.pathname.split('/').pop()?.trim();
+  const pathSegments = url.pathname.split('/');
+  const breedId = pathSegments[pathSegments.length - 1]?.trim();
 
   if (!breedId) {
     return NextResponse.json({ message: 'Missing breed ID' }, { status: 400 });
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: 'Breed not found' }, { status: 404 });
     }
 
-    return NextResponse.json(breed, { status: 200 });
+    return NextResponse.json(breed);
   } catch (error) {
     console.error('GET /api/dog-breeds/[id] error:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });

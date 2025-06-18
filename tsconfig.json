@@ -18,8 +18,9 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",            // 여기로 이동
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"]           // 중첩 없이 여기에 작성
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

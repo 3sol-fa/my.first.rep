@@ -16,7 +16,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     return (
         <input
             type="text"
-            placeholder="검색어 입력..."
+            placeholder=" Seach..."
             value={query}
             onChange={handleChange}
             style={{ width: "100%", padding: "8px", marginBottom: "10px", boxSizing: "border-box" }}

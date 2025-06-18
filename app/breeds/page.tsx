@@ -1,31 +1,58 @@
 'use client';
-import DogList from '@/components/DogList';
-import SearchBar from '@/components/SearchBar';
-import { DogBreed } from '@/types';
-import React, { useState } from 'react'
-import { useBreeds } from './BreedsContext';
 
-const Breeds = () => {
-  const { breeds } = useBreeds();
-    const [filteredBreeds, setFilteredBreeds] = useState<DogBreed[]>(breeds);
+import Link from "next/link";  // Link 추가
+import { useEffect, useState } from "react";
+import { fetchAllDogBreeds } from "@/services/dogBreedsService";
+import { DogBreed } from "@/types/DogBreed";
+import SearchBar from "@/components/SearchBar";
 
-    function handleSearch(query: string) {
-        const filtered = breeds.filter((breed) =>
-            breed.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredBreeds(filtered);
-    }
+export default function BreedsPage() {
+  const [breeds, setBreeds] = useState<DogBreed[]>([]);
+  const [filtered, setFiltered] = useState<DogBreed[]>([]);
 
-    return (
-        <main className="h-screen w-full">
-            <div className="p-4 mx-auto max-w-[800px]">
-                <h1 className="text-2xl">🐶 Dog Breed List</h1>
-                <h2 className="text-xl mb-2">Please click the breed name to see more details.</h2>
-                <SearchBar onSearch={handleSearch} />
-                <DogList breeds={filteredBreeds} />
-            </div>
-        </main>
+  useEffect(() => {
+    const loadBreeds = async () => {
+      try {
+        const data = await fetchAllDogBreeds();
+        setBreeds(data);
+        setFiltered(data);
+      } catch (error) {
+        console.error("Failed to fetch dog breeds:", error);
+      }
+    };
+    loadBreeds();
+  }, []);
+
+  const handleSearch = (query: string) => {
+    const lower = query.toLowerCase();
+    const result = breeds.filter((breed) =>
+      breed.name.toLowerCase().includes(lower)
     );
-}
+    setFiltered(result);
+  };
 
-export default Breeds
+  return (
+    <div className="pt-[80px] px-4 max-w-5xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">🐶 All Dog Breeds</h1>
+
+      {/* 🔍 SearchBar 삽입 */}
+      <SearchBar onSearch={handleSearch} />
+
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
+        {filtered.map((breed) => (
+          <Link
+            key={breed.id}
+            href={`/breeds/${breed.id}`}
+            className="block bg-yellow-50 p-4 rounded-lg shadow-md hover:bg-yellow-200 transition-colors duration-300"
+          >
+            <h2 className="text-lg font-semibold text-yellow-900">{breed.name}</h2>
+            <p className="text-sm text-yellow-800 mt-1">{breed.description}</p>
+            <p className="text-xs text-yellow-700 mt-2">
+             Life: {`Max: ${breed.life_max ?? 'N/A'}, Min: ${breed.life_min ?? 'N/A'}`}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}

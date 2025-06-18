@@ -1,40 +1,35 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import './globals.css';
+import { Inter } from 'next/font/google';
+import React from 'react';
+import Navbar from '@/components/Navbar';
+import { Toaster } from '@/components/ui/toaster';
+import type { Metadata } from 'next';
+import Providers from './providers';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Breeds Project",
-  description: "My first Next.js project",
+  title: 'Dog Breeds App',
+  description: 'Find and learn about different dog breeds',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navbar />
-        <main className="flex-grow">
-        {children}
+      <body className={`${inter.className} bg-[#FFF9DB] text-[#333] min-h-screen flex flex-col`}>
+        <Providers>
+          <Navbar />
 
-        </main>
-        <Footer />
+          {/* content가 Navbar 밑으로 내려가도록 padding-top 줌 (네비 높이 약 64px) */}
+          <main className="flex-grow max-w-6xl w-full mx-auto px-4 py-8 pt-[72px]">
+            {children}
+          </main>
+
+          <footer className="bg-[#FFF3BF] text-center text-sm text-[#7B61FF] py-4">
+            © {new Date().getFullYear()} DogBreeds App. Built with 💛 and React.
+          </footer>
+        </Providers>
+        <Toaster />
       </body>
     </html>
   );

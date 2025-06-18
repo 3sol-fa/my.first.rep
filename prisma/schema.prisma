@@ -374,3 +374,15 @@ enum one_time_token_type {
 
   @@schema("auth")
 }
+
+model inquiry {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("public")
+}

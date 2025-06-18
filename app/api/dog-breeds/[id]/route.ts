@@ -1,11 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getBreedById } from '@/lib/getBreedById';
 
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const breedId = params.id?.trim();
+export async function GET(event: any) {
+  const breedId = event.params?.id?.trim();
 
   if (!breedId) {
     return NextResponse.json({ message: 'Missing breed ID' }, { status: 400 });

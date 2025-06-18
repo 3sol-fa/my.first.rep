@@ -3,8 +3,7 @@ import { getBreedById } from '@/lib/getBreedById';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const pathSegments = url.pathname.split('/');
-  const breedId = pathSegments[pathSegments.length - 1]?.trim();
+  const breedId = url.pathname.split('/').pop()?.trim();
 
   if (!breedId) {
     return NextResponse.json({ message: 'Missing breed ID' }, { status: 400 });
